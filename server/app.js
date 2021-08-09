@@ -1,5 +1,6 @@
 const express = require("express");
-const products = require("./data/products");
+
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
@@ -7,13 +8,6 @@ app.get("/", (req, res) => {
     res.send("API is running");
 });
 
-app.get("/api/products", (req, res) => {
-    res.json(products);
-});
-
-app.get("/api/products/:id", (req, res) => {
-    const product = products.find((prod) => prod._id === req.params.id);
-    res.json(product);
-});
+app.use("/api/products", productRoutes);
 
 module.exports = app;
