@@ -1,4 +1,5 @@
 const express = require("express");
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const productRoutes = require("./routes/productRoutes");
 
@@ -9,5 +10,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", productRoutes);
+
+app.use(notFound);
+
+app.use(errorHandler);
 
 module.exports = app;
