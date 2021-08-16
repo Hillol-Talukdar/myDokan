@@ -17,7 +17,7 @@ import axios from "axios";
 import { listProductDetails } from "../actions/productActions";
 // import products from "../products";
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = ({ history, match }) => {
     // from file
     // const product = products.find((p) => p._id === match.params.id);
 
@@ -46,6 +46,10 @@ const ProductScreen = ({ match }) => {
     useEffect(() => {
         dispatch(listProductDetails(match.params.id));
     }, [dispatch, match]);
+
+    const addToCartHandler = () =>{
+        history.push(`/cart/${match.params.id}?qty=${qty}`);
+    }
 
     return (
         <>
@@ -139,6 +143,7 @@ const ProductScreen = ({ match }) => {
                                 <ListGroup.Item>
                                     <Row>
                                         <Button
+                                            onClick={addToCartHandler}
                                             className="btn-block"
                                             variant="dark"
                                             type="button"
