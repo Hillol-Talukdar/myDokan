@@ -37,7 +37,7 @@ const ProductScreen = ({ history, match }) => {
     // }, [match]);
 
     // from API using redux store
-    const [qty, setQty] = useState(0);
+    const [qty, setQty] = useState(1);
     const dispatch = useDispatch();
 
     const productDetails = useSelector((state) => state.productDetails);
@@ -47,9 +47,9 @@ const ProductScreen = ({ history, match }) => {
         dispatch(listProductDetails(match.params.id));
     }, [dispatch, match]);
 
-    const addToCartHandler = () =>{
+    const addToCartHandler = () => {
         history.push(`/cart/${match.params.id}?qty=${qty}`);
-    }
+    };
 
     return (
         <>
