@@ -141,17 +141,7 @@ const CartScreen = ({ match, location, history }) => {
                                 Proceed To Checkout
                             </Button>
                         </ListGroup.Item>
-
-                        <ListGroup.Item>
-                            <Button
-                                type="button"
-                                clssName="btn-block"
-                                disabled={cartItems.length === 0}
-                                onClick={checkoutHandler}
-                            >
-                                Proceed To Checkout
-                            </Button>
-                        </ListGroup.Item>
+                        
                     </ListGroup>
                 </Card>
             </Col>
