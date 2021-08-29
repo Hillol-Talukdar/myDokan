@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const genrerateToken = require("../utils/genrerateToken.js");
+const generateToken = require("../utils/generateToken");
 const User = require("../models/user");
 
 exports.authUser = asyncHandler(async (req, res) => {
@@ -13,7 +13,7 @@ exports.authUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin,
-            token: null,
+            token: generateToken(user._id),
         });
     } else {
         // res.status(401).json({
