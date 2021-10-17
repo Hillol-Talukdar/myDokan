@@ -76,7 +76,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
         req.body.password = await bcrypt.hash(req.body.password, 12);
     }
 
-    req.body.isAdmin = false;
+    delete req.body.isAdmin; // removes isAdmin attribute from body
 
     const user = await User.findByIdAndUpdate(req.user._id, req.body, {
         new: true,
