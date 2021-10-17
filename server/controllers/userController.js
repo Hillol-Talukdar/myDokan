@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const generateToken = require("../utils/generateToken");
+const bcrypt = require("bcrypt");
 const User = require("../models/user");
 
 exports.login = asyncHandler(async (req, res) => {
@@ -68,4 +69,28 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("User not found!");
     }
+});
+
+exports.updateUserProfile = asyncHandler(async (req, res) => {
+    if (req.body.password) {
+        req.body.password = await bcrypt.hash(req.body.password, 12);
+    }
+
+    req.body.isAdmin = false;
+
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
+        new: true,
+    });
+
+    if (!user) {
+        res.status(404);
+        throw new Error("User not found!");
+    }
+
+    res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+    });
 });
