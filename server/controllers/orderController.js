@@ -33,3 +33,16 @@ exports.addOrderItems = asyncHandler(async (req, res) => {
         res.status(201).json(createdOrder);
     }
 });
+
+exports.getAOrder = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id).populate(
+        "user",
+        "name email"
+    );
+
+    if (order) {
+        res.status(200).json(order);
+    } else {
+        throw new Error("Order not found");
+    }
+});
