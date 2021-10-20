@@ -29,7 +29,7 @@ const OrderScreen = ({ match }) => {
 
     useEffect(() => {
         dispatch(getOrderDetails(orderId));
-    }, []);
+    }, [dispatch, orderId]);
 
     return loading ? (
         <Loader />
@@ -67,7 +67,9 @@ const OrderScreen = ({ match }) => {
                                     Paid on {order.deliverdAt}
                                 </Message>
                             ) : (
-                                <Message variant="danger">Not delivered</Message>
+                                <Message variant="danger">
+                                    Not delivered
+                                </Message>
                             )}
                         </ListGroup.Item>
 
