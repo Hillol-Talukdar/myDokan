@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.route("/").post(protect, orderController.addOrderItems);
 router.route("/:id").get(protect, orderController.getAOrder);
-router.route("/:id/pay").get(protect, orderController.updateOrderToPaid);
+router.route("/:id/pay").patch(protect, orderController.updateOrderToPaid);
 
 module.exports = router;
