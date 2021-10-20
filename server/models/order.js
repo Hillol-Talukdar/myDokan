@@ -57,7 +57,7 @@ const orderSchema = new mongoose.Schema(
         paymentResult: {
             id: String,
             status: String,
-            updateType: String,
+            update_time: String,
             email_address: String,
         },
         taxPrice: {
