@@ -96,7 +96,7 @@ export const payOrder =
                 },
             };
 
-            const { data } = await axios.path(
+            const { data } = await axios.patch(
                 `/api/orders/${orderId}/pay`,
                 paymentResult,
                 config

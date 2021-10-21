@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, payOrder } from "../actions/orderActions";
+import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
 const OrderScreen = ({ match }) => {
     const orderId = match.params.id;
@@ -12,6 +13,9 @@ const OrderScreen = ({ match }) => {
 
     const orderDetails = useSelector((state) => state.orderDetails);
     const { order, loading, error } = orderDetails;
+
+    const orderPay = useSelector((state) => state.orderPay);
+    const { loading: loadingPay, success: successPay } = orderPay;
 
     if (!loading) {
         //   Calculate prices
@@ -28,8 +32,23 @@ const OrderScreen = ({ match }) => {
     }
 
     useEffect(() => {
-        dispatch(getOrderDetails(orderId));
-    }, [dispatch, orderId]);
+        if (!order || successPay) {
+            dispatch({ type: ORDER_PAY_RESET });
+            dispatch(getOrderDetails(orderId));
+        } else if (!order.isPaid) {
+            // console.log("NOT PAID");
+        }
+    }, [dispatch, orderId, successPay, order]);
+
+    const successPaymentHandler = () => {
+        let paymentResult = {};
+        paymentResult.status = "completed";
+        paymentResult.update_time = Date.now();
+
+        // console.log("orderid _>>", orderId);
+
+        dispatch(payOrder(orderId, paymentResult));
+    };
 
     return loading ? (
         <Loader />
@@ -160,6 +179,25 @@ const OrderScreen = ({ match }) => {
                                     <Col>${order.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
+
+                            {!order.isPaid && (
+                                <ListGroup.Item>
+                                    {loadingPay ? (
+                                        <Loader />
+                                    ) : (
+                                        <Row>
+                                            <Button
+                                                type="button"
+                                                className="btn-block"
+                                                variant="dark"
+                                                onClick={successPaymentHandler}
+                                            >
+                                                Order
+                                            </Button>
+                                        </Row>
+                                    )}
+                                </ListGroup.Item>
+                            )}
                         </ListGroup>
                     </Card>
                 </Col>
