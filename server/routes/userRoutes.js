@@ -19,4 +19,12 @@ router
     .get(authController.protect, userController.getUserProfile)
     .patch(authController.protect, userController.updateUserProfile);
 
+router
+    .route("/:id")
+    .delete(
+        authController.protect,
+        authController.admin,
+        userController.deleteUser
+    );
+
 module.exports = router;
