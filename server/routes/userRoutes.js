@@ -25,6 +25,12 @@ router
         authController.protect,
         authController.admin,
         userController.deleteUser
+    )
+    .get(authController.protect, authController.admin, userController.getUser)
+    .patch(
+        authController.protect,
+        authController.admin,
+        userController.updateUser
     );
 
 module.exports = router;

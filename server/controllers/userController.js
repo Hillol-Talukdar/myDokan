@@ -101,6 +101,37 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     res.status(200).json(users);
 });
 
+exports.getUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (user) {
+        res.status(200).json(user);
+    } else {
+        res.status(404);
+        throw new Error("User not found");
+    }
+});
+
+exports.updateUser = asyncHandler(async (req, res) => {
+    delete req.body.password;
+
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+    });
+
+    if (!user) {
+        res.status(404);
+        throw new Error("User not found!");
+    }
+
+    res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+    });
+});
+
 exports.deleteUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
 
