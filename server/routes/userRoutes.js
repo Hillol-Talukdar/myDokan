@@ -3,8 +3,17 @@ const userController = require("../controllers/userController");
 const authController = require("../middleware/authMiddleware");
 const router = express.Router();
 
+router
+    .route("/")
+    .get(
+        authController.protect,
+        authController.admin,
+        userController.getAllUser
+    );
+
 router.post("/login", userController.login);
 router.post("/signup", userController.signup);
+
 router
     .route("/profile")
     .get(authController.protect, userController.getUserProfile)
