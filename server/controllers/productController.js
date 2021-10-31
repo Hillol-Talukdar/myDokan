@@ -18,3 +18,19 @@ exports.getProduct = asyncHandler(async (req, res) => {
         });
     }
 });
+
+exports.deleteProduct = asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+
+    if (product) {
+        product.remove();
+
+        res.status(200).json({
+            message: "Product removed",
+        });
+    } else {
+        res.status(404).json({
+            message: "Product not found!",
+        });
+    }
+});
