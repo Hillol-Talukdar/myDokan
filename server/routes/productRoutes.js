@@ -4,7 +4,15 @@ const authController = require("../middleware/authMiddleware");
 // const products = require("./data/products");
 const router = express.Router();
 
-router.route("/").get(productController.getAllProducts);
+router
+    .route("/")
+    .get(productController.getAllProducts)
+    .post(
+        authController.protect,
+        authController.admin,
+        productController.createProduct
+    );
+
 router
     .route("/:id")
     .get(productController.getProduct)
@@ -12,6 +20,11 @@ router
         authController.protect,
         authController.admin,
         productController.deleteProduct
+    )
+    .patch(
+        authController.protect,
+        authController.admin,
+        productController.updateProduct
     );
 
 // showing products from json file
