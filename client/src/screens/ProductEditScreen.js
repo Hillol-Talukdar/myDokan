@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
@@ -8,7 +9,7 @@ import FormContainer from "../components/FormContainer";
 import { listProductDetails, updateProduct } from "../actions/productActions";
 import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
 
-export const ProfileEditScreen = ({ match, history }) => {
+const ProductEditScreen = ({ match, history }) => {
     const productId = match.params.id;
 
     const [name, setName] = useState("");
@@ -16,8 +17,9 @@ export const ProfileEditScreen = ({ match, history }) => {
     const [image, setImage] = useState("");
     const [brand, setBrand] = useState("");
     const [category, setCategory] = useState("");
-    const [countInStock, setCountInStock] = useState("");
+    const [countInStock, setCountInStock] = useState(0);
     const [description, setDescription] = useState("");
+    const [uploading, setUploading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -34,7 +36,6 @@ export const ProfileEditScreen = ({ match, history }) => {
     useEffect(() => {
         if (successUpdate) {
             dispatch({ type: PRODUCT_UPDATE_RESET });
-
             history.push("/admin/productlist");
         } else {
             if (!product.name || product._id !== productId) {
@@ -51,9 +52,31 @@ export const ProfileEditScreen = ({ match, history }) => {
         }
     }, [dispatch, history, productId, product, successUpdate]);
 
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append("image", file);
+        setUploading(true);
+
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            };
+
+            const { data } = await axios.post("/api/upload", formData, config);
+
+            setImage(data);
+            setUploading(false);
+        } catch (error) {
+            console.error(error);
+            setUploading(false);
+        }
+    };
+
     const submitHandler = (e) => {
         e.preventDefault();
-
         dispatch(
             updateProduct({
                 _id: productId,
@@ -70,19 +93,15 @@ export const ProfileEditScreen = ({ match, history }) => {
 
     return (
         <>
-            <Link to="/admin/productlist" className="btn btn-dark my-3">
+            <Link to="/admin/productlist" className="btn btn-light my-3">
                 Go Back
             </Link>
-
             <FormContainer>
                 <h1>Edit Product</h1>
-
                 {loadingUpdate && <Loader />}
-
                 {errorUpdate && (
                     <Message variant="danger">{errorUpdate}</Message>
                 )}
-
                 {loading ? (
                     <Loader />
                 ) : error ? (
@@ -117,6 +136,13 @@ export const ProfileEditScreen = ({ match, history }) => {
                                 value={image}
                                 onChange={(e) => setImage(e.target.value)}
                             ></Form.Control>
+                            <Form.File
+                                id="image-file"
+                                label="Choose File"
+                                custom
+                                onChange={uploadFileHandler}
+                            ></Form.File>
+                            {uploading && <Loader />}
                         </Form.Group>
 
                         <Form.Group controlId="brand">
@@ -161,7 +187,7 @@ export const ProfileEditScreen = ({ match, history }) => {
                             ></Form.Control>
                         </Form.Group>
 
-                        <Button type="submit" variant="dark">
+                        <Button type="submit" variant="primary">
                             Update
                         </Button>
                     </Form>
@@ -171,4 +197,4 @@ export const ProfileEditScreen = ({ match, history }) => {
     );
 };
 
-export default ProfileEditScreen;
+export default ProductEditScreen;
