@@ -27,6 +27,10 @@ router
         productController.updateProduct
     );
 
+router
+    .route("/:id/reviews")
+    .post(authController.protect, productController.createProductReview);
+
 // showing products from json file
 // router.get("/", (req, res) => {
 //     res.json(products);
