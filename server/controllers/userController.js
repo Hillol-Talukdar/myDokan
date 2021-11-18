@@ -73,7 +73,8 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
 
 exports.updateUserProfile = asyncHandler(async (req, res) => {
     if (req.body.password) {
-        req.body.password = await bcrypt.hash(req.body.password, 12);
+        const password = await bcrypt.hash(req.body.password, 12);
+        req.body.password = password;
     }
 
     delete req.body.isAdmin; // removes isAdmin attribute from body
@@ -113,7 +114,12 @@ exports.getUser = asyncHandler(async (req, res) => {
 });
 
 exports.updateUser = asyncHandler(async (req, res) => {
-    delete req.body.password;
+    // delete req.body.password;
+
+    // if (req.body.password) {
+    //     const password = await bcrypt.hash(req.body.password, 12);
+    //     req.body.password = password;
+    // }
 
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
         new: true,

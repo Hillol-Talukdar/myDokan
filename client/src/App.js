@@ -74,6 +74,12 @@ const App = () => {
                         exact
                     />
 
+                    <Route
+                        path="/search/:keyword"
+                        component={HomeScreen}
+                        exact
+                    />
+
                     <Route path="/order/:id" component={OrderScreen} exact />
 
                     <Route path="/cart/:id?" component={CartScreen} />

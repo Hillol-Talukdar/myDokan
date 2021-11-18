@@ -2,7 +2,16 @@ const asyncHandler = require("express-async-handler");
 const Product = require("../models/product");
 
 exports.getAllProducts = asyncHandler(async (req, res) => {
-    const products = await Product.find({});
+    const keyword = req.query.keyword
+        ? {
+              name: {
+                  $regex: req.query.keyword,
+                  $options: "i", // i for case insensitive
+              },
+          }
+        : {};
+
+    const products = await Product.find({ ...keyword });
 
     res.status(200).json(products);
 });
