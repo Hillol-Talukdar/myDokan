@@ -57,6 +57,12 @@ const App = () => {
                     />
 
                     <Route
+                        path="/admin/productlist/:pageNumber"
+                        component={ProductListScreen}
+                        exact
+                    />
+
+                    <Route
                         path="/admin/user/:id/edit"
                         component={UserEditScreen}
                         exact
@@ -76,6 +82,18 @@ const App = () => {
 
                     <Route
                         path="/search/:keyword"
+                        component={HomeScreen}
+                        exact
+                    />
+
+                    <Route
+                        path="search/:keyword/page/:pageNumber"
+                        component={HomeScreen}
+                        exact
+                    />
+
+                    <Route
+                        path="/page/:pageNumber"
                         component={HomeScreen}
                         exact
                     />
