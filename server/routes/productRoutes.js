@@ -13,6 +13,8 @@ router
         productController.createProduct
     );
 
+router.route("/top").get(productController.getTopProducts);
+
 router
     .route("/:id")
     .get(productController.getProduct)
