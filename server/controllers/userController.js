@@ -72,9 +72,15 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
 });
 
 exports.updateUserProfile = asyncHandler(async (req, res) => {
-    if (req.body.password) {
+    const { password } = req.body;
+
+    console.log("password", password);
+
+    if (password && password.length >= 6) {
         const password = await bcrypt.hash(req.body.password, 12);
         req.body.password = password;
+    } else {
+        delete req.body.password;
     }
 
     delete req.body.isAdmin; // removes isAdmin attribute from body
@@ -93,6 +99,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
         name: user.name,
         email: user.email,
         isAdmin: user.isAdmin,
+        token: generateToken(user._id),
     });
 });
 
@@ -116,10 +123,10 @@ exports.getUser = asyncHandler(async (req, res) => {
 exports.updateUser = asyncHandler(async (req, res) => {
     // delete req.body.password;
 
-    // if (req.body.password) {
-    //     const password = await bcrypt.hash(req.body.password, 12);
-    //     req.body.password = password;
-    // }
+    if (req.body.password) {
+        const password = await bcrypt.hash(req.body.password, 12);
+        req.body.password = password;
+    }
 
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
